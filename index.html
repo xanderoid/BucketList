@@ -29,7 +29,7 @@
     $(function() {
 
         var client = new Apigee.Client({
-            orgName: 'yourorgname', // Your Apigee.com username for App Services
+            orgName: 'devbyxan', // Your Apigee.com username for App Services
             appName: 'sandbox' // Your Apigee App Services app name
         });
 
@@ -41,6 +41,60 @@
                 "ql": "order by title"
             }
         });
+
+        //check to see if user is already logged in
+        client.getLoggedInUser(function(err, data, user){
+            if (err) {
+                window.location = "#page-login";
+            } else {
+                if (client.isLoggedIn()) {
+                    appUser = user;
+                    loadItems();
+                } else {
+                    window.location = "#page-login"
+                }
+            }
+
+        });
+
+        //create new user
+        $('#form-add-user').on('click', '#btn-adduser-submit', createUser);
+
+        function createUser() {
+            var fullname = $('#form-new-fullname').val();
+            var username = $('#form-new-username').val();
+            var password = $('#form-new-password').val();
+            var email = $('#form-new-email').val();
+            client.signup(username, password, email, fullname, function (err, data){
+                if (err) {
+                    console.log('FAIL') 
+                } else {
+                    //log user in with newly created user info
+                    login(username, password);
+                    //eliminate duplication
+                    $('#form-new-fullname').val('');
+                    $('#form-new-username').val('');
+                    $('#form-new-password').val('');
+                    $('#form-new-email').val('');
+                }
+            })
+        }
+
+        //create login function
+        function login (username, password) {
+            $('#login-section-error').html('');
+            client.login(username, password, function (err, data, user){
+                if (err){
+                    $('#login-section-error').html('There was an error logging you in.')
+                } else {
+                    appUser = user;
+                    $('#form-username').val('');
+                    $('#form-password').val('');
+                    window.location = "#page-main";
+                    loadItems();
+                }
+            })
+        }
 
         navigator.geolocation.getCurrentPosition(geoSuccess, geoFailure);
 
@@ -199,6 +253,46 @@
                 <a id="btn-cancel" data-role="button" data-icon="delete" href="#page-main">Cancel</a>
                 <a id="btn-submit" data-role="button" data-icon="plus">Submit</a>
             </form>
+        </article>
+        <!-- /content -->
+    </section>
+    <section id="page-newuser" data-role="page">
+        <header data-role="header" data-theme="a">
+            <h1>New User</h1>
+        </header>
+        <!-- /header -->
+        <article data-role="content">
+            <form action="" id="form-add-user" class="" style="">
+                <label for="form-new-fullname">Full Name:</label>
+                <input id="form-new-fullname" type="text" placeholder="Enter your full name..." />
+                <label for="form-new-username">Username:</label>
+                <input id="form-new-username" type="text" placeholder="Choose a username..." />
+                <label for="form-new-password">Password:</label>
+                <input id="form-new-password" placeholder="Choose a password" />
+                <label for="form-new-email">Email:</label>
+                <input id="form-new-email" placeholder="Enter your email address..." />
+                <a id="btn-clear" data-role="button" data-icon="delete">Clear</a>
+                <a id="btn-adduser-submit" data-role="button" data-icon="plus">Submit</a>
+            </form>
+        </article>
+        <!-- /content -->
+    </section>
+    <section id="page-login" data-role="page">
+        <header data-role="header" data-theme="a">
+            <h1>Login</h1>
+        </header>
+        <!-- /header -->
+        <article data-role="content">
+            <form action="" id="form-login-user" class="" style="">
+                <label for="form-username">Username:</label>
+                <input id="form-username" type="text" placeholder="Enter your username..." />
+                <label for="form-password">Password:</label>
+                <textarea name="" id="form-password" placeholder="Enter your password..."></textarea>
+                <a id="btn-clear" data-role="button" data-icon="delete">Clear</a>
+                <a id="btn-login-submit" data-role="button" data-icon="plus">Submit</a>
+                <a id="btn-newuser" data-role="button" data-icon="user" href="#page-newuser">Create an Account</a>
+            </form>
+            <p id="login-section-error"></p>
         </article>
         <!-- /content -->
     </section>
