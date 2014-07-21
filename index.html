@@ -37,7 +37,16 @@
             "client": client,
             "type": "items",
             "qs": {
-                "limit": 25,
+                "limit": 30,
+                "ql": "order by title"
+            }
+        });
+
+        var myList = new Apigee.Collection({
+            "client": client,
+            "type": "/users/me/likes",
+            "qs": {
+                "limit": 30,
                 "ql": "order by title"
             }
         });
@@ -121,7 +130,7 @@
                     "ql": "location within 1500000 of " + my_location.latitude + "," + my_location.longitude
                 }
             });
-            loadItems();
+            //loadItems();
         }
 
         function geoFailure() {
@@ -140,7 +149,7 @@
                     "ql": "location within 1500000 of " + my_location.latitude + "," + my_location.longitude
                 }
             });
-            loadItems();
+            //loadItems();
         }
 
         function populateList(collection) {
@@ -155,19 +164,18 @@
         // loadItems();
 
         function loadItems() {
-            items.fetch(
+            myList.fetch(
                 function(err, data) { // Success
                     if (err) {
                         alert("Read failed - loading offline data");
-                        items = client.restoreCollection(localStorage.getItem('items'));
-                        items.resetEntityPointer();
-                        populateList(items);
+                        myList = client.restoreCollection(localStorage.getItem('myList'));
+                        myList.resetEntityPointer();
+                        populateList(myList);
                     } else {
-                        populateList(items);
-                        localStorage.setItem('items', items.serialize());
+                        populateList(myList);
+                        localStorage.setItem('myList', myList.serialize());
                     }
-                }
-            );
+                });
         }
 
         $('#form-add-item').on('click', '#btn-submit', function() {
@@ -181,11 +189,18 @@
                     if (error) {
                         alert("write failed");
                     } else {
+                        appUser.connect("likes", response, function (err, data){
+                            if(err) {
+                                console.log("An error occured");
+                            }else {
+                                console.log('Entity connected');
+                            }
+                        })
                         $('#form-title').val('');
                         $('#form-place').val('');
                         $('#form-desc').val('');
                         loadItems();
-                        window.location = "#page-main";
+                        //window.location = "#page-main";
                     }
                 });
             }
