@@ -1,0 +1,40 @@
+<section id="page-newuser" data-role="page">
+        <header data-role="header" data-theme="a">
+            <h1>New User</h1>
+        </header>
+        <!-- /header -->
+        <article data-role="content">
+            <form action="" id="form-add-user" class="" style="">
+                <label for="form-new-fullname">Full Name:</label>
+                <input id="form-new-fullname" type="text" placeholder="Enter your full name..." />
+                <label for="form-new-username">Username:</label>
+                <input id="form-new-username" type="text" placeholder="Choose a username..." />
+                <label for="form-new-password">Password:</label>
+                <input id="form-new-password" placeholder="Choose a password" />
+                <label for="form-new-email">Email:</label>
+                <input id="form-new-email" placeholder="Enter your email address..." />
+                <a id="btn-clear" data-role="button" data-icon="delete">Clear</a>
+                <a id="btn-adduser-submit" data-role="button" data-icon="plus">Submit</a>
+            </form>
+        </article>
+        <!-- /content -->
+    </section>
+    <section id="page-login" data-role="page">
+        <header data-role="header" data-theme="a">
+            <h1>Login</h1>
+        </header>
+        <!-- /header -->
+        <article data-role="content">
+            <form action="" id="form-login-user" class="" style="">
+                <label for="form-username">Username:</label>
+                <input id="form-username" type="text" placeholder="Enter your username..." />
+                <label for="form-password">Password:</label>
+                <textarea name="" id="form-password" placeholder="Enter your password..."></textarea>
+                <a id="btn-clear" data-role="button" data-icon="delete">Clear</a>
+                <a id="btn-login-submit" data-role="button" data-icon="plus">Submit</a>
+                <a id="btn-newuser" data-role="button" data-icon="user" href="#page-newuser">Create an Account</a>
+            </form>
+            <p id="login-section-error"></p>
+        </article>
+        <!-- /content -->
+    </section>
